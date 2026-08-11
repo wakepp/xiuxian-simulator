@@ -23,7 +23,10 @@ jobs:
       run: npm install
 
     - name: 同步 Capacitor iOS 项目
-      run: npx cap add ios || true && npx cap sync ios
+      run: |
+        npx cap add ios || true
+        npx cap sync ios
+        cd ios/App && pod install && cd ../..
 
     - name: 查看可用 Xcode 版本
       run: |
@@ -34,7 +37,7 @@ jobs:
     - name: 获取项目信息
       id: info
       run: |
-        echo "workspace=$(find ios/App -name '*.xcworkspace' | head -1)" >> $GITHUB_OUTPUT
+        echo "workspace=ios/App/App.xcworkspace" >> $GITHUB_OUTPUT
         echo "scheme=App" >> $GITHUB_OUTPUT
 
     - name: 编译 iOS 应用（无签名，通用二进制）
