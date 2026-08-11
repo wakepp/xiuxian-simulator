@@ -1,0 +1,72 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 安装 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: 安装依赖
+      run: npm install
+
+    - name: 同步 Capacitor iOS 项目
+      run: npx cap add ios || true && npx cap sync ios
+
+    - name: 选择 Xcode 版本
+      run: |
+        sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+        xcodebuild -version
+
+    - name: 获取项目信息
+      id: info
+      run: |
+        echo "workspace=$(find ios/App -name '*.xcworkspace' | head -1)" >> $GITHUB_OUTPUT
+        echo "scheme=App" >> $GITHUB_OUTPUT
+
+    - name: 编译 iOS 应用（无签名，通用二进制）
+      run: |
+        xcodebuild -workspace "${{ steps.info.outputs.workspace }}" \
+          -scheme "${{ steps.info.outputs.scheme }}" \
+          -sdk iphoneos \
+          -configuration Release \
+          -derivedDataPath build \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          PRODUCT_BUNDLE_IDENTIFIER=com.xiuxian.simulator \
+          DEVELOPMENT_TEAM="" \
+          PROVISIONING_PROFILE_SPECIFIER=""
+
+    - name: 打包 IPA（无签名）
+      run: |
+        mkdir -p Payload
+        cp -r build/Build/Products/Release-iphoneos/*.app Payload/
+        zip -r xiuxian-simulator-unsigned.ipa Payload
+
+    - name: 上传 IPA 到 Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: xiuxian-simulator-ios
+        path: xiuxian-simulator-unsigned.ipa
+        retention-days: 30
+
+    - name: 创建 Release（仅 tag 触发）
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: xiuxian-simulator-unsigned.ipa
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

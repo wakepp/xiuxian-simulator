@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>文字修仙传</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 开始界面 -->
+        <div id="start-screen" class="screen active">
+            <div class="title">
+                <h1>文字修仙传</h1>
+                <p class="subtitle">一念成仙，一念成魔</p>
+            </div>
+            <div class="menu-buttons">
+                <button id="btn-new-game" class="btn btn-primary">开始修仙</button>
+                <button id="btn-load-game" class="btn btn-secondary">继续修仙</button>
+            </div>
+        </div>
+
+        <!-- 角色创建界面 -->
+        <div id="create-screen" class="screen">
+            <h2>创建角色</h2>
+            <div class="form-group">
+                <label>道号：</label>
+                <input type="text" id="player-name" placeholder="请输入你的道号" maxlength="10">
+            </div>
+            <div class="form-group">
+                <label>灵根：</label>
+                <div id="spirit-root-result" class="result-box">
+                    <button id="btn-roll-root" class="btn btn-small">探灵</button>
+                    <span id="root-display">未探灵</span>
+                </div>
+            </div>
+            <button id="btn-start-cultivation" class="btn btn-primary" disabled>踏入仙途</button>
+        </div>
+
+        <!-- 主游戏界面 -->
+        <div id="game-screen" class="screen">
+            <!-- 顶部状态栏 -->
+            <div id="status-bar">
+                <div class="status-row">
+                    <span id="player-name-display">无名</span>
+                    <span id="realm-display">凡人</span>
+                </div>
+                <div class="status-row">
+                    <div class="progress-container">
+                        <label>修为：</label>
+                        <div class="progress-bar">
+                            <div id="exp-bar" class="progress-fill"></div>
+                        </div>
+                        <span id="exp-text">0/100</span>
+                    </div>
+                </div>
+                <div class="status-row">
+                    <div class="progress-container">
+                        <label>气血：</label>
+                        <div class="progress-bar">
+                            <div id="hp-bar" class="progress-fill hp"></div>
+                        </div>
+                        <span id="hp-text">100/100</span>
+                    </div>
+                </div>
+                <div class="status-row">
+                    <div class="progress-container">
+                        <label>灵力：</label>
+                        <div class="progress-bar">
+                            <div id="mp-bar" class="progress-fill mp"></div>
+                        </div>
+                        <span id="mp-text">50/50</span>
+                    </div>
+                </div>
+                <div class="status-row">
+                    <span>灵石：<span id="spirit-stones">0</span></span>
+                    <span>寿元：<span id="lifespan">100</span>年</span>
+                </div>
+            </div>
+
+            <!-- 日志区域 -->
+            <div id="game-log">
+                <div id="log-content"></div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div id="action-panel">
+                <div class="action-group">
+                    <h3>修炼</h3>
+                    <button class="btn btn-action" data-action="meditate">打坐修炼</button>
+                    <button class="btn btn-action" data-action="breakthrough">尝试突破</button>
+                    <button class="btn btn-action" data-action="alchemy">炼丹</button>
+                </div>
+                <div class="action-group">
+                    <h3>历练</h3>
+                    <button class="btn btn-action" data-action="explore">外出历练</button>
+                    <button class="btn btn-action" data-action="adventure">秘境探险</button>
+                    <button class="btn btn-action" data-action="sect">宗门任务</button>
+                </div>
+                <div class="action-group">
+                    <h3>其他</h3>
+                    <button class="btn btn-action" data-action="inventory">背包</button>
+                    <button class="btn btn-action" data-action="skills">功法</button>
+                    <button class="btn btn-action" data-action="save">存档</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 背包界面 -->
+        <div id="inventory-screen" class="screen">
+            <div class="screen-header">
+                <h2>背包</h2>
+                <button class="btn btn-close" data-back>返回</button>
+            </div>
+            <div id="inventory-list" class="list-container"></div>
+        </div>
+
+        <!-- 功法界面 -->
+        <div id="skills-screen" class="screen">
+            <div class="screen-header">
+                <h2>功法</h2>
+                <button class="btn btn-close" data-back>返回</button>
+            </div>
+            <div id="skills-list" class="list-container"></div>
+        </div>
+
+        <!-- 弹窗 -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3 id="modal-title"></h3>
+                <div id="modal-body"></div>
+                <div id="modal-buttons"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/cultivation.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/inventory.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
