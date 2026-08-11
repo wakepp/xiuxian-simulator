@@ -25,9 +25,10 @@ jobs:
     - name: 同步 Capacitor iOS 项目
       run: npx cap add ios || true && npx cap sync ios
 
-    - name: 选择 Xcode 版本
+    - name: 查看可用 Xcode 版本
       run: |
-        sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+        ls /Applications/ | grep Xcode
+        xcode-select -p
         xcodebuild -version
 
     - name: 获取项目信息
